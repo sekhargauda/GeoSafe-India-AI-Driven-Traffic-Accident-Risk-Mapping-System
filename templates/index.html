@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>India Accident Risk Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+
+  <style>
+    /* ---------------- GLOBAL ---------------- */
+    :root {
+      --bg-dark: #0f172a;
+      --bg-panel: rgba(255, 255, 255, 0.92);
+      --accent: #38bdf8;
+      --text-dark: #0f172a;
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      /* nav + map */
+      background: #0b1220;
+    }
+
+    /* ---------------- NAVBAR ---------------- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, #020617, #111827);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav b {
+      font-size: 20px;
+      letter-spacing: 0.4px;
+    }
+
+    /* ---------------- BUTTONS ---------------- */
+    .buttons button {
+      margin-left: 10px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.5);
+    }
+
+    .buttons button:active {
+      transform: scale(0.96);
+    }
+
+    /* ---------------- MAP ---------------- */
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+
+    /* ---------------- LEGEND ---------------- */
+    .legend-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(10px);
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      box-shadow: var(--shadow-md);
+      color: var(--text-dark);
+    }
+
+    .legend-card h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .legend-card div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .legend-card span {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    /* Risk colors */
+    .low {
+      background: #16a34a;
+    }
+
+    .moderate {
+      background: #facc15;
+    }
+
+    .high {
+      background: #f97316;
+    }
+
+    .very-high {
+      background: #dc2626;
+    }
+
+    /* ---------------- SIDEBAR ---------------- */
+    .info-panel {
+      position: absolute;
+      top: 80px;
+      right: 24px;
+      width: 300px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(14px);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1200;
+      transition: all 0.35s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .info-panel.hidden {
+      transform: translateX(130%);
+      opacity: 0;
+    }
+
+    .info-panel h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .info-panel p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #334155;
+    }
+
+    /* ---------------- CLOSE BUTTON ---------------- */
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: #ef4444;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* ===================== LARGE TABLETS & SMALL LAPTOPS (≤ 1024px) ===================== */
+    @media (max-width: 1024px) {
+      .nav {
+        padding: 12px 16px;
+      }
+
+      .buttons button {
+        padding: 7px 14px;
+        font-size: 13px;
+      }
+
+      .info-panel {
+        width: 280px;
+        right: 16px;
+        top: 76px;
+      }
+
+    }
+
+    /* ===================== TABLETS & PHONES (≤ 768px) ===================== */
+    @media (max-width: 768px) {
+
+      /* Navbar layout */
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+      }
+
+      .buttons {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+      }
+
+      .buttons button {
+        flex: 1;
+        margin-left: 0;
+        padding: 8px 0;
+        font-size: 12px;
+      }
+
+      /* Sidebar → bottom sheet */
+      .info-panel {
+        top: auto;
+        bottom: 14px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        border-radius: 18px;
+      }
+    }
+
+    /* ===================== SMALL PHONES (≤ 480px) ===================== */
+    @media (max-width: 480px) {
+      .nav b {
+        font-size: 14px;
+      }
+
+      .buttons button {
+        font-size: 11px;
+        padding: 6px 0;
+      }
+
+      .info-panel {
+        padding: 14px 16px;
+      }
+
+      .info-panel h3 {
+        font-size: 16px;
+      }
+
+      .info-panel p {
+        font-size: 13px;
+      }
+
+      .close-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 15px;
+      }
+    }
+
+    /* ===================== SHORT HEIGHT DEVICES (Landscape Phones) ===================== */
+    @media (max-height: 500px) {
+      .info-panel {
+        bottom: 8px;
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="nav">
+    <b>🚦 India Accident Risk Map</b>
+    <div class="buttons">
+      <button onclick="loadAll()">All</button>
+      <button onclick="loadStates()">States</button>
+      <button onclick="loadUTs()">UTs</button>
+      <button onclick="loadCities()">Cities</button>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="info-panel" class="info-panel hidden">
+    <button class="close-btn" onclick="closePanel()">×</button>
+
+    <h3 id="info-title">
+      <span class="title-icon">📍</span>
+      <span class="title-text"></span>
+    </h3>
+
+    <div id="info-content"></div>
+  </div>
+
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="/static/index.js"></script>
+
+</body>
+
+</html>
