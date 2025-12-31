@@ -28,7 +28,6 @@
     body {
       display: grid;
       grid-template-rows: auto 1fr;
-      /* nav + map */
       background: #0b1220;
     }
 
@@ -264,7 +263,7 @@
 
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="/static/index.js"></script>
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
 
 </body>
 
