@@ -1,6 +1,7 @@
-# 📍 India Accident Risk Map
+# 📍 GeoSafe India: AI-Driven Traffic Accident Risk Mapping System
 
-The **India Accident Risk Map** is an interactive web-based visualization system that combines data science, AI-assisted geocoding, and mapping technology to analyze traffic accident risks across States, Union Territories, and Cities in India.
+The **GeoSafe India** is an interactive, web-based traffic safety analytics platform designed to analyze, assess, and visualize road accident risks across India.
+The system integrates data science, AI-assisted geocoding, and geospatial mapping to identify high-risk zones at the State, Union Territory, and City levels.
 
 
 
