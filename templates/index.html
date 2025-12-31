@@ -60,7 +60,7 @@
       cursor: pointer;
       font-size: 13px;
       font-weight: 600;
-      color: white;
+      color: black;
       background: linear-gradient(135deg, #2563eb, #38bdf8);
       box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
       transition: all 0.25s ease;
@@ -74,6 +74,12 @@
     .buttons button:active {
       transform: scale(0.96);
     }
+
+    .buttons button.active {
+      color: white;
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.45);
+    }
+
 
     /* <---------------- MAP ----------------> */
     #map {
@@ -233,12 +239,13 @@
 <body>
 
   <div class="nav">
-    <b>🚦 India Accident Risk Map</b>
+    <b>🚦 GeoSafe India</b>
     <div class="buttons">
-      <button onclick="loadAll()">All</button>
-      <button onclick="loadStates()">States</button>
-      <button onclick="loadUTs()">UTs</button>
-      <button onclick="loadCities()">Cities</button>
+      <button onclick="setActiveButton(this); loadAll()">All</button>
+      <button onclick="setActiveButton(this); loadStates()">States</button>
+      <button onclick="setActiveButton(this); loadUTs()">UTs</button>
+      <button onclick="setActiveButton(this); loadCities()">Cities</button>
+
     </div>
   </div>
 

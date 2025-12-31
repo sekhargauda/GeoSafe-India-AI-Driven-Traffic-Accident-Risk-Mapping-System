@@ -10,10 +10,6 @@ DATA_PATH = os.path.join(BASE_DIR, "data", "accident_map_ready.csv")
 
 df = pd.read_csv(DATA_PATH)
 
-# <---------- CLEAN DATA ---------->
-df["State/UT/City"] = df["State/UT/City"].astype(str).str.strip().str.lower()
-df["region_type"] = df["region_type"].astype(str).str.strip()
-
 # <---------- ROUTES ---------->
 @app.route("/")
 def home():

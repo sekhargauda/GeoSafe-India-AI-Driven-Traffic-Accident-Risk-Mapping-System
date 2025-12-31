@@ -36,6 +36,15 @@ let stateLayer = null;
 let utLayer = null;
 
 /* <---------------- HELPERS ----------------> */
+
+function setActiveButton(btn) {
+  document.querySelectorAll(".buttons button")
+    .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+}
+
+
 function riskColor(cat) {
   if (cat === "Very High Risk") return "#dc2626";
   if (cat === "High Risk") return "#f97316";
